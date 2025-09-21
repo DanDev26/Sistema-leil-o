@@ -8,31 +8,20 @@ import javax.swing.JOptionPane;
 
 public class ProdutosDAO {
 
-    public void cadastrarProduto(ProdutosDTO produto) {
-        Connection conn = null;
-        PreparedStatement pstm = null;
-        String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
-
-        try {
-            conn = new conectaDAO().connectDB();
-            pstm = conn.prepareStatement(sql);
-            pstm.setString(1, produto.getNome());
-            pstm.setInt(2, produto.getValor());
-            pstm.setString(3, produto.getStatus());
-
-            int rows = pstm.executeUpdate();
-            if (rows > 0) {
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Erro: nenhum registro inserido.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto: " + e.getMessage());
-        } finally {
-            try { if (pstm != null) pstm.close(); } catch (SQLException e) {}
-            try { if (conn != null) conn.close(); } catch (SQLException e) {}
-        }
+    public void venderProduto(int idProduto) {
+    String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+    
+    try (Connection conn = new conectaDAO().connectDB();
+         PreparedStatement pstm = conn.prepareStatement(sql)) {
+        
+        pstm.setInt(1, idProduto);
+        pstm.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+        
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
     }
+}
 
     public ArrayList<ProdutosDTO> listarProdutos() {
         ArrayList<ProdutosDTO> listagem = new ArrayList<>();
