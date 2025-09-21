@@ -1,33 +1,28 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-
-
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
+ * Classe de conexão com o banco
+ * Ajuste URL/USUARIO/SENHA conforme seu ambiente.
  */
 public class conectaDAO {
-    
-    public Connection connectDB(){
+
+    public Connection connectDB() {
         Connection conn = null;
-        
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
-            
-        } catch (SQLException erro){
-            JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+            // Carregar driver (opcional em versões mais novas, mas pode ajudar)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/leiloes?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String user = "root";
+            String password = ""; // altere se necessário
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Driver JDBC não encontrado: " + ex.getMessage());
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro ConectaDAO: " + erro.getMessage());
         }
         return conn;
     }
-    
 }
