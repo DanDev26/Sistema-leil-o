@@ -25,19 +25,21 @@ public class ProdutosDAO {
     }
 
     // NOVO: venderProduto()
-    public void venderProduto(int idProduto) {
-        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
-        try (Connection conn = new conectaDAO().connectDB();
-             PreparedStatement pstm = conn.prepareStatement(sql)) {
+    public boolean venderProduto(int idProduto) {
+    String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+    try (Connection conn = new conectaDAO().connectDB();
+         PreparedStatement pstm = conn.prepareStatement(sql)) {
 
-            pstm.setInt(1, idProduto);
-            pstm.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+        pstm.setInt(1, idProduto);
+        int linhasAfetadas = pstm.executeUpdate();
 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
-        }
+        return linhasAfetadas > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
     // NOVO: listarProdutosVendidos()
     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
